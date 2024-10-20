@@ -138,3 +138,4 @@ def fig(size):
     draw_pix(first1, first1, first2, first2)
 
 fig(5)
+print('hey')
