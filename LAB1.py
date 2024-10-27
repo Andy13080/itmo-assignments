@@ -111,30 +111,44 @@ process_numbers()
 
 
 
+import time
+import os
 
-white = '\x1b[48;5;15m'
-stop = '\033[0m'
+SET_COLOR = '\x1b[48;5;15m'
+END = "\x1b[0m"
+CLEAR = "\033[H"
+
+def pattern(position=0, radius=6):
+    for y in range(2 * radius + 1):
+        for x in range(4 * radius + 2):
+            if (x - radius)**2 + (y - (radius + position))**2 <= radius**2:
+                print(f"{SET_COLOR}{' '}{END}", end='')
+            elif (x - (3 * radius + 1))**2 + (y - (radius + position))**2 <= radius**2:
+                print(f"{SET_COLOR}{' '}{END}", end='')
+            else:
+                print(" ", end='')
+
+        print()
+
+def main():
+    position = 0
+    frames = 0
+
+    while True:
+        pattern(position)
+
+        frames += 1
+        if frames >= 3:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            frames = 0
+
+        position += 2
+        if position > 10:
+            position = 0
+
+        time.sleep(0.5)
+
+if __name__ == "__main__":
+    main()
 
 
-def draw_pix(st1, en1, st2, en2):
-    ln1 = ' '*(st1 - 1) + white + ' '*(en1 - st1 + 1) + stop
-    ln2 = ' '*(st2 - en1 - 1) + white + ' '*(en2 - st2 + 1) + stop
-    print(ln1 + ln2)
-
-
-def fig(size):
-    width_of_place = size * 4 + 1
-    height_of_place = size * 2 + 1
-
-    first1 = ((width_of_place // 2) + 1) // 2 + 1
-    first2 = first1 + size * 2 + 2
-
-    for i in range(first1):
-        draw_pix(first1 - i, first1 + i, first2 - i, first2 + i)
-
-    for i in range(first1, 0, -1):
-        draw_pix(first1 - i, first1 + i, first2 - i, first2 + i)
-
-    draw_pix(first1, first1, first2, first2)
-
-fig(5)
